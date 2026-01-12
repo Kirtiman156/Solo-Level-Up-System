@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Solo Level-Up System</title>
+    <meta name="description" content="Personal Level-Up System inspired by Solo Leveling anime for B.Tech CSE students">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4a9eff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Level-Up">
+    <meta name="application-name" content="Solo Level-Up System">
+    <meta name="msapplication-TileColor" content="#050510">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-128.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Scanlines overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Particle background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Main System Container -->
+    <div class="system-container">
+        <!-- Header Navigation -->
+        <nav class="system-nav">
+            <div class="nav-brand">
+                <span class="system-icon">⬡</span>
+                <span class="system-title">SYSTEM</span>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="status">STATUS</button>
+                <button class="nav-tab" data-tab="quests">QUESTS</button>
+                <button class="nav-tab" data-tab="analytics">ANALYTICS</button>
+                <button class="nav-tab" data-tab="skills">SKILLS</button>
+                <button class="nav-tab" data-tab="inventory">INVENTORY</button>
+                <button class="nav-tab" data-tab="settings">SETTINGS</button>
+            </div>
+            <div class="nav-time" id="currentTime"></div>
+        </nav>
+
+        <!-- Status Panel -->
+        <div class="panel status-panel active" id="status-panel">
+            <div class="panel-header">
+                <div class="header-icon">!</div>
+                <h2>STATUS</h2>
+            </div>
+
+            <div class="panel-content">
+                <div class="status-top">
+                    <div class="level-display">
+                        <span class="level-number" id="playerLevel">1</span>
+                        <span class="level-label">LEVEL</span>
+                    </div>
+                    <div class="player-info">
+                        <div class="info-row">
+                            <span class="info-label">JOB:</span>
+                            <span class="info-value" id="playerJob">B.Tech CSE Student</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">TITLE:</span>
+                            <span class="info-value title-text" id="playerTitle">The Beginner</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-bars">
+                    <div class="bar-group">
+                        <div class="bar-icon hp-icon">✚</div>
+                        <div class="bar-label">HP</div>
+                        <div class="bar-container">
+                            <div class="bar hp-bar" id="hpBar"></div>
+                        </div>
+                        <span class="bar-value"><span id="currentHP">100</span>/<span id="maxHP">100</span></span>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-icon mp-icon">🧪</div>
+                        <div class="bar-label">MP</div>
+                        <div class="bar-container">
+                            <div class="bar mp-bar" id="mpBar"></div>
+                        </div>
+                        <span class="bar-value"><span id="currentMP">50</span>/<span id="maxMP">50</span></span>
+                    </div>
+                    <div class="fatigue-display">
+                        <span class="fatigue-icon">⚙</span>
+                        <span class="fatigue-label">FATIGUE:</span>
+                        <span class="fatigue-value" id="fatigueValue">0</span>
+                    </div>
+                </div>
+
+                <div class="xp-section">
+                    <div class="xp-label">EXP</div>
+                    <div class="xp-bar-container">
+                        <div class="xp-bar" id="xpBar"></div>
+                    </div>
+                    <span class="xp-value"><span id="currentXP">0</span>/<span id="xpToLevel">100</span></span>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-icon str-icon">💪</span>
+                            <span class="stat-name">STR:</span>
+                            <span class="stat-value" id="strValue">10</span>
+                            <span class="stat-bonus" id="strBonus">(+0)</span>
+                            <button class="stat-add-btn" data-stat="str" title="Add Point">+</button>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon vit-icon">❤️</span>
+                            <span class="stat-name">VIT:</span>
+                            <span class="stat-value" id="vitValue">10</span>
+                            <span class="stat-bonus" id="vitBonus">(+0)</span>
+                            <button class="stat-add-btn" data-stat="vit" title="Add Point">+</button>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon agi-icon">⚡</span>
+                            <span class="stat-name">AGI:</span>
+                            <span class="stat-value" id="agiValue">10</span>
+                            <span class="stat-bonus" id="agiBonus">(+0)</span>
+                            <button class="stat-add-btn" data-stat="agi" title="Add Point">+</button>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon int-icon">🧠</span>
+                            <span class="stat-name">INT:</span>
+                            <span class="stat-value" id="intValue">10</span>
+                            <span class="stat-bonus" id="intBonus">(+0)</span>
+                            <button class="stat-add-btn" data-stat="int" title="Add Point">+</button>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon per-icon">👁️</span>
+                            <span class="stat-name">PER:</span>
+                            <span class="stat-value" id="perValue">10</span>
+                            <span class="stat-bonus" id="perBonus">(+0)</span>
+                            <button class="stat-add-btn" data-stat="per" title="Add Point">+</button>
+                        </div>
+                        <div class="available-points">
+                            <span class="points-label">Available<br>Ability<br>Points</span>
+                            <span class="points-value" id="availablePoints">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quests Panel -->
+        <div class="panel quests-panel" id="quests-panel">
+            <div class="panel-header">
+                <div class="header-icon">📋</div>
+                <h2>DAILY QUESTS</h2>
+                <div class="quest-reset-timer">Resets in: <span id="resetTimer">00:00:00</span></div>
+            </div>
+
+            <div class="panel-content">
+                <div class="quest-list" id="questList">
+                    <!-- Quests will be populated by JS -->
+                </div>
+
+                <div class="weekly-quests">
+                    <h3 class="section-title">WEEKLY CHALLENGES</h3>
+                    <div class="quest-list" id="weeklyQuestList">
+                        <!-- Weekly quests will be populated by JS -->
+                    </div>
+                </div>
+
+                <div class="custom-quest-section">
+                    <h3 class="section-title">CREATE CUSTOM QUEST</h3>
+                    <div class="custom-quest-form">
+                        <input type="text" id="customQuestName" placeholder="Quest name..." maxlength="50">
+                        <select id="customQuestStat">
+                            <option value="str">STR</option>
+                            <option value="vit">VIT</option>
+                            <option value="agi">AGI</option>
+                            <option value="int">INT</option>
+                            <option value="per">PER</option>
+                        </select>
+                        <input type="number" id="customQuestXP" placeholder="XP" min="1" max="100" value="10">
+                        <button class="btn-add-quest" id="addCustomQuest">ADD QUEST</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Panel -->
+        <div class="panel analytics-panel" id="analytics-panel">
+            <div class="panel-header">
+                <div class="header-icon">📊</div>
+                <h2>ANALYTICS</h2>
+            </div>
+
+            <div class="panel-content">
+                <!-- Stats Summary Cards -->
+                <div class="analytics-summary">
+                    <div class="summary-card">
+                        <span class="summary-icon">🔥</span>
+                        <div class="summary-info">
+                            <span class="summary-value" id="currentStreak">0</span>
+                            <span class="summary-label">Day Streak</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-icon">⚡</span>
+                        <div class="summary-info">
+                            <span class="summary-value" id="totalXPEarned">0</span>
+                            <span class="summary-label">Total XP</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-icon">✅</span>
+                        <div class="summary-info">
+                            <span class="summary-value" id="totalQuestsCompleted">0</span>
+                            <span class="summary-label">Quests Done</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-icon">📅</span>
+                        <div class="summary-info">
+                            <span class="summary-value" id="activeDays">0</span>
+                            <span class="summary-label">Active Days</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contribution Calendar -->
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <h3 class="section-title">ACTIVITY CALENDAR</h3>
+                        <div class="calendar-nav">
+                            <button class="cal-nav-btn" id="prevMonth">◀</button>
+                            <span class="cal-month-year" id="calendarMonthYear">December 2024</span>
+                            <button class="cal-nav-btn" id="nextMonth">▶</button>
+                        </div>
+                    </div>
+                    <div class="calendar-legend">
+                        <span class="legend-label">Less</span>
+                        <div class="legend-box level-0"></div>
+                        <div class="legend-box level-1"></div>
+                        <div class="legend-box level-2"></div>
+                        <div class="legend-box level-3"></div>
+                        <div class="legend-box level-4"></div>
+                        <span class="legend-label">More</span>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar days will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- XP Graph -->
+                <div class="graph-section">
+                    <h3 class="section-title">XP PROGRESSION (Last 30 Days)</h3>
+                    <div class="xp-graph" id="xpGraph">
+                        <canvas id="xpCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Stat Distribution -->
+                <div class="stat-distribution">
+                    <h3 class="section-title">STAT DISTRIBUTION</h3>
+                    <div class="stat-bars">
+                        <div class="dist-stat">
+                            <span class="dist-label">STR</span>
+                            <div class="dist-bar-container">
+                                <div class="dist-bar str-bar" id="strDistBar"></div>
+                            </div>
+                            <span class="dist-value" id="strDistValue">0</span>
+                        </div>
+                        <div class="dist-stat">
+                            <span class="dist-label">VIT</span>
+                            <div class="dist-bar-container">
+                                <div class="dist-bar vit-bar" id="vitDistBar"></div>
+                            </div>
+                            <span class="dist-value" id="vitDistValue">0</span>
+                        </div>
+                        <div class="dist-stat">
+                            <span class="dist-label">AGI</span>
+                            <div class="dist-bar-container">
+                                <div class="dist-bar agi-bar" id="agiDistBar"></div>
+                            </div>
+                            <span class="dist-value" id="agiDistValue">0</span>
+                        </div>
+                        <div class="dist-stat">
+                            <span class="dist-label">INT</span>
+                            <div class="dist-bar-container">
+                                <div class="dist-bar int-bar" id="intDistBar"></div>
+                            </div>
+                            <span class="dist-value" id="intDistValue">0</span>
+                        </div>
+                        <div class="dist-stat">
+                            <span class="dist-label">PER</span>
+                            <div class="dist-bar-container">
+                                <div class="dist-bar per-bar" id="perDistBar"></div>
+                            </div>
+                            <span class="dist-value" id="perDistValue">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Panel -->
+        <div class="panel skills-panel" id="skills-panel">
+            <div class="panel-header">
+                <div class="header-icon">⚔️</div>
+                <h2>SKILLS</h2>
+            </div>
+
+            <div class="panel-content">
+                <div class="skills-grid" id="skillsGrid">
+                    <!-- Skills will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Panel -->
+        <div class="panel inventory-panel" id="inventory-panel">
+            <div class="panel-header">
+                <div class="header-icon">🎒</div>
+                <h2>INVENTORY</h2>
+            </div>
+
+            <div class="panel-content">
+                <div class="inventory-tabs">
+                    <button class="inv-tab active" data-inv="achievements">Achievements</button>
+                    <button class="inv-tab" data-inv="projects">Projects</button>
+                    <button class="inv-tab" data-inv="certifications">Certifications</button>
+                    <button class="inv-tab" data-inv="books">Books Read</button>
+                </div>
+
+                <div class="inventory-content" id="inventoryContent">
+                    <!-- Inventory items will be populated by JS -->
+                </div>
+
+                <div class="add-item-form">
+                    <input type="text" id="newItemName" placeholder="Add new item...">
+                    <button class="btn-add-item" id="addItemBtn">ADD</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="panel settings-panel" id="settings-panel">
+            <div class="panel-header">
+                <div class="header-icon">⚙️</div>
+                <h2>SETTINGS</h2>
+            </div>
+
+            <div class="panel-content">
+                <div class="settings-group">
+                    <h3>Player Profile</h3>
+                    <div class="setting-row">
+                        <label>Player Name:</label>
+                        <input type="text" id="playerName" placeholder="Enter your name">
+                    </div>
+                    <div class="setting-row">
+                        <label>Job Title:</label>
+                        <input type="text" id="customJob" placeholder="B.Tech CSE Student">
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Audio Settings</h3>
+                    <div class="setting-row">
+                        <label>Sound Effects:</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="soundEnabled" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <label>SFX Volume:</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+                        <span id="volumeValue">50%</span>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Background Music</h3>
+                    <div class="setting-row">
+                        <label>Music:</label>
+                        <button class="btn-music-toggle" id="musicToggle">▶ PLAY MUSIC</button>
+                    </div>
+                    <div class="setting-row">
+                        <label>Music Volume:</label>
+                        <input type="range" id="musicVolumeSlider" min="0" max="100" value="30">
+                        <span id="musicVolumeValue">30%</span>
+                    </div>
+                    <div class="setting-row">
+                        <label>Custom Music:</label>
+                        <input type="file" id="customMusicFile" accept="audio/*" style="display:none">
+                        <button class="btn-settings" id="loadCustomMusic">LOAD YOUR MUSIC</button>
+                    </div>
+                    <p class="music-hint">💡 Load your own Solo Leveling OST for the authentic experience!</p>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Data Management</h3>
+                    <div class="setting-row buttons-row">
+                        <button class="btn-settings" id="exportData">EXPORT DATA</button>
+                        <button class="btn-settings" id="importData">IMPORT DATA</button>
+                        <button class="btn-settings danger" id="resetData">RESET ALL DATA</button>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h3>About</h3>
+                    <p class="about-text">
+                        Solo Level-Up System v1.0<br>
+                        Inspired by Solo Leveling Anime<br>
+                        Designed for B.Tech CSE Students<br>
+                        "I alone level up."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Detail Popup -->
+    <div class="day-detail-overlay" id="dayDetailOverlay">
+        <div class="day-detail-popup">
+            <div class="day-detail-header">
+                <span class="day-detail-date" id="dayDetailDate">December 25, 2024</span>
+                <button class="day-detail-close" id="closeDayDetail">×</button>
+            </div>
+            <div class="day-detail-content" id="dayDetailContent">
+                <!-- Day details will be populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Popup -->
+    <div class="notification-overlay" id="notificationOverlay">
+        <div class="notification-popup">
+            <div class="notification-header">
+                <div class="notification-icon">!</div>
+                <span class="notification-title">NOTIFICATION</span>
+            </div>
+            <div class="notification-content" id="notificationContent">
+                <!-- Dynamic content -->
+            </div>
+            <button class="notification-close" id="closeNotification">CONFIRM</button>
+        </div>
+    </div>
+
+    <!-- Level Up Overlay -->
+    <div class="levelup-overlay" id="levelupOverlay">
+        <div class="levelup-content">
+            <div class="levelup-text">Leveled up!</div>
+            <div class="levelup-level">Level <span id="newLevel">2</span></div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Floating Music Control -->
+    <button class="floating-music-btn" id="floatingMusicBtn" title="Toggle Background Music">
+        🎵
+    </button>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
